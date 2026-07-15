@@ -236,7 +236,7 @@ export async function exportProcreateCombined(
   onProgress?.(1)
 }
 
-function buildABRv2(canvas: HTMLCanvasElement): Uint8Array {
+function buildABRv2(canvas: HTMLCanvasElement): ArrayBuffer {
   const width = canvas.width
   const height = canvas.height
   const ctx = canvas.getContext('2d')!
@@ -283,7 +283,7 @@ function buildABRv2(canvas: HTMLCanvasElement): Uint8Array {
   dv.setUint16(o, 8); o += 2
   dv.setUint8(o, 0); o += 1
   buf.set(grayscale, o)
-  return buf
+  return ab
 }
 
 export async function exportABR(

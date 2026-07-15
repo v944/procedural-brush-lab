@@ -89,12 +89,6 @@ function readPixelsToDataURL(gl: WebGL2RenderingContext, width: number, height: 
   return flipped.toDataURL('image/png')
 }
 
-function readPixelsToImageData(gl: WebGL2RenderingContext, width: number, height: number): ImageData {
-  const pixels = new Uint8Array(width * height * 4)
-  gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels)
-  return new ImageData(new Uint8ClampedArray(pixels), width, height)
-}
-
 function setAllTipUniforms(
   gl: WebGL2RenderingContext,
   program: WebGLProgram,

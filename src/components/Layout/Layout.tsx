@@ -19,20 +19,8 @@ function useIsMobile() {
   return isMobile
 }
 
-function useIsTablet() {
-  const [isTablet, setIsTablet] = useState(false)
-  useEffect(() => {
-    const check = () => setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024)
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [])
-  return isTablet
-}
-
 export function Layout({ canvas, panel, tipPreview, strokePreview }: LayoutProps) {
   const isMobile = useIsMobile()
-  const isTablet = useIsTablet()
   const [panelOpen, setPanelOpen] = useState(false)
 
   if (tipPreview && strokePreview && !isMobile) {

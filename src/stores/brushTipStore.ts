@@ -154,7 +154,7 @@ const normalizeAngle = (deg: number): number => {
 
 export const useBrushTipStore = create<BrushTipState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       ...DEFAULTS,
 
       setShape: (shape) => set({ shape }),

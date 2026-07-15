@@ -113,20 +113,6 @@ export class BrushStrokeRenderer {
     return Math.max(1, base + variation)
   }
 
-  private interpolatePoint(points: StrokePoint[], t: number): StrokePoint {
-    if (points.length === 0) return { x: 0, y: 0, pressure: 0 }
-    if (points.length === 1) return points[0]
-    const index = Math.min(Math.floor(t * (points.length - 1)), points.length - 2)
-    const frac = t * (points.length - 1) - index
-    const a = points[index]
-    const b = points[Math.min(index + 1, points.length - 1)]
-    return {
-      x: a.x + (b.x - a.x) * frac,
-      y: a.y + (b.y - a.y) * frac,
-      pressure: a.pressure + (b.pressure - a.pressure) * frac,
-    }
-  }
-
   private interpolatePoints(
     points: StrokePoint[],
     settings: BrushTipState,
@@ -226,7 +212,7 @@ export class BrushStrokeRenderer {
     return jitter * controlFactor * randomFactor * 180
   }
 
-  private computeRoundnessJitter(i: number, settings: BrushTipState): number {
+  private computeRoundnessJitter(_i: number, settings: BrushTipState): number {
     if (!settings.shapeDynamics.enabled) return 100
     const jitter = settings.shapeDynamics.roundnessJitter / 100
     const minR = settings.shapeDynamics.minRoundness / 100
@@ -234,13 +220,13 @@ export class BrushStrokeRenderer {
     return (minR + (1.0 - minR) * (1.0 - jitter * randomFactor)) * 100
   }
 
-  private computeScatter(i: number, settings: BrushTipState): number {
+  private computeScatter(_i: number, settings: BrushTipState): number {
     if (!settings.scattering.enabled) return 0
     const scatter = settings.scattering.scatter / 100
     return (this.rng.next() - 0.5) * 2 * scatter * settings.diameter
   }
 
-  private computeOpacity(i: number, pressure: number, settings: BrushTipState): number {
+  private computeOpacity(_i: number, pressure: number, settings: BrushTipState): number {
     if (!settings.transfer.enabled) return pressure
     const jitter = settings.transfer.opacityJitter / 100
     const minOp = settings.transfer.minOpacity / 100
