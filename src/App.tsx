@@ -6,8 +6,13 @@ import { ParameterPanel } from './components/Panel/ParameterPanel'
 import { ExportPanel } from './components/Panel/ExportPanel'
 import { PresetPanel } from './components/Panel/PresetPanel'
 import { PaywallOverlay } from './components/UI/PaywallOverlay'
+import { PricingModal } from './components/Pricing/PricingModal'
+import { useStore } from './stores/useStore'
 
 function App() {
+  const showPricing = useStore((s) => s.showPricing)
+  const setShowPricing = useStore((s) => s.setShowPricing)
+
   return (
     <>
       <Header />
@@ -35,6 +40,9 @@ function App() {
         }
       />
       <PaywallOverlay />
+      {showPricing && (
+        <PricingModal tier="pro" onClose={() => setShowPricing(false)} />
+      )}
     </>
   )
 }

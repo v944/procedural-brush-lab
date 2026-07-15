@@ -6,6 +6,7 @@ import { Download } from 'lucide-react'
 import type { ExportFormat, ExportResolution } from '../../types'
 import { exportPNG, exportProcreate, exportABR } from '../../utils/export'
 import { readTexture } from '../../hooks/useWebGLCanvas'
+import { applyWatermark } from '../../utils/watermark'
 
 const FORMAT_OPTIONS = [
   { value: 'png' as ExportFormat, label: 'PNG' },
@@ -78,6 +79,10 @@ export function ExportPanel() {
       await new Promise<void>((resolve) => {
         img.onload = async () => {
           ctx.drawImage(img, 0, 0, exportResolution, exportResolution)
+
+          if (!isPro) {
+            applyWatermark(canvas)
+          }
 
           try {
             switch (exportFormat) {
