@@ -4,6 +4,8 @@ import { Settings, X } from 'lucide-react'
 interface LayoutProps {
   canvas: ReactNode
   panel: ReactNode
+  tipPreview?: ReactNode
+  strokePreview?: ReactNode
 }
 
 function useIsMobile() {
@@ -17,14 +19,54 @@ function useIsMobile() {
   return isMobile
 }
 
-export function Layout({ canvas, panel }: LayoutProps) {
+function useIsTablet() {
+  const [isTablet, setIsTablet] = useState(false)
+  useEffect(() => {
+    const check = () => setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+  return isTablet
+}
+
+export function Layout({ canvas, panel, tipPreview, strokePreview }: LayoutProps) {
   const isMobile = useIsMobile()
+  const isTablet = useIsTablet()
   const [panelOpen, setPanelOpen] = useState(false)
+
+  if (tipPreview && strokePreview && !isMobile) {
+    return (
+      <div className="flex-1 flex flex-row max-w-[1400px] mx-auto w-full bg-bg-page">
+        <div className="w-[340px] shrink-0 bg-bg-sidebar border-r border-white/5 p-5 overflow-y-auto space-y-6">
+          <div className="bg-bg-surface rounded-xl p-5 border border-white/5">
+            {panel}
+          </div>
+        </div>
+
+        <div className="flex-1 flex flex-col items-center justify-start p-6 gap-4">
+          {tipPreview}
+          {canvas}
+        </div>
+
+        {strokePreview && (
+          <div className="w-[420px] shrink-0 bg-bg-sidebar border-l border-white/5 p-5 flex flex-col">
+            <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
+              Stroke Preview
+            </h2>
+            {strokePreview}
+          </div>
+        )}
+      </div>
+    )
+  }
 
   return (
     <div className="flex-1 flex flex-col lg:flex-row gap-6 max-w-[1400px] mx-auto w-full bg-bg-page">
       <div className="flex-1 flex items-start justify-center lg:sticky lg:top-6 p-6">
         {canvas}
+        {tipPreview}
+        {strokePreview}
       </div>
 
       {!isMobile && (

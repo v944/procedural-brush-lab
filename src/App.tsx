@@ -5,6 +5,13 @@ import { BrushPreview } from './components/Canvas/BrushPreview'
 import { ParameterPanel } from './components/Panel/ParameterPanel'
 import { ExportPanel } from './components/Panel/ExportPanel'
 import { PresetPanel } from './components/Panel/PresetPanel'
+import { TipPanel } from './components/Panel/TipPanel'
+import { ProceduralSettingsPanel } from './components/Panel/ProceduralSettingsPanel'
+import { DynamicsPanel } from './components/Panel/DynamicsPanel'
+import { ScatteringPanel } from './components/Panel/ScatteringPanel'
+import { TransferPanel } from './components/Panel/TransferPanel'
+import { BrushTipCanvas } from './components/BrushTip/BrushTipCanvas'
+import { StrokePreviewCanvas } from './components/StrokePreview/StrokePreviewCanvas'
 import { PaywallOverlay } from './components/UI/PaywallOverlay'
 import { PricingModal } from './components/Pricing/PricingModal'
 import { useStore } from './stores/useStore'
@@ -25,19 +32,27 @@ function App() {
         }
         panel={
           <>
-            <div className="bg-bg-surface rounded-xl p-5 border border-white/5">
+            <TipPanel />
+            <div className="border-t border-white/5 pt-4 mt-4">
+              <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Texture</h2>
               <ParameterPanel />
             </div>
-            <div className="bg-bg-surface rounded-xl p-5 border border-white/5">
+            <ProceduralSettingsPanel />
+            <DynamicsPanel />
+            <ScatteringPanel />
+            <TransferPanel />
+            <div className="border-t border-white/5 pt-4 mt-4">
               <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Export</h2>
               <ExportPanel />
             </div>
-            <div className="bg-bg-surface rounded-xl p-5 border border-white/5">
+            <div className="border-t border-white/5 pt-4 mt-4">
               <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Presets</h2>
               <PresetPanel />
             </div>
           </>
         }
+        tipPreview={<BrushTipCanvas />}
+        strokePreview={<StrokePreviewCanvas />}
       />
       <PaywallOverlay />
       {showPricing && (
