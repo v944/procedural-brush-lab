@@ -118,19 +118,19 @@ export function ExportPanel() {
       </div>
 
       <div>
-        <label className="text-xs font-medium text-text-secondary mb-1 block">Resolution</label>
+        <label className="text-xs font-medium text-gray-400 mb-1 block">Resolution</label>
         <Dropdown value={exportResolution} options={resolutionOptions} onChange={setExportResolution} />
       </div>
 
       {isExporting && (
         <div className="space-y-1">
-          <div className="h-1 bg-border rounded-full overflow-hidden">
+          <div className="h-2 bg-white/5 rounded-full overflow-hidden">
             <div
-              className="h-full bg-primary transition-all duration-300 ease-linear rounded-full"
+              className="h-full bg-orange-400 transition-all duration-300 ease-linear rounded-full"
               style={{ width: `${exportProgress * 100}%` }}
             />
           </div>
-          <div className="text-xs text-text-muted text-right">{Math.round(exportProgress * 100)}%</div>
+          <div className="text-xs text-gray-400 text-right">{Math.round(exportProgress * 100)}%</div>
         </div>
       )}
 

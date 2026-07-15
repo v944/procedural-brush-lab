@@ -37,7 +37,7 @@ export function PreviewCanvas() {
         <WarningBanner message="Your browser does not support WebGL2. Using simplified Canvas 2D rendering. For full functionality, update your browser." />
       )}
 
-      <div className="w-[512px] h-[512px] max-w-full max-h-[60vh] bg-surface-elevated rounded-xl overflow-hidden border border-border">
+      <div className="w-[512px] h-[512px] max-w-full max-h-[60vh] bg-bg-surface rounded-xl overflow-hidden border border-white/10">
         <canvas
           ref={canvasRef}
           data-preview-canvas
@@ -55,8 +55,8 @@ export function PreviewCanvas() {
             onClick={() => setViewMode(mode)}
             className={`px-4 py-1.5 text-xs font-medium rounded-md transition-colors cursor-pointer ${
               viewMode === mode
-                ? 'bg-primary text-white'
-                : 'bg-surface text-text-secondary border border-border hover:bg-surface-elevated'
+                ? 'bg-orange-500 text-black'
+                : 'bg-white/5 text-gray-400 border border-white/5 hover:bg-white/10'
             }`}
           >
             {mode === 'single' ? 'Single' : mode === 'tile2x2' ? '2×2 Tile' : 'Brush Preview'}

@@ -89,10 +89,10 @@ export function BrushPreview() {
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="text-xs font-medium text-text-secondary">Brush Preview</div>
+      <div className="text-xs font-medium text-gray-400">Brush Preview</div>
       <canvas
         ref={canvasRef}
-        className="w-[256px] h-[256px] bg-surface-elevated rounded-xl border border-border cursor-crosshair touch-none"
+        className="w-[256px] h-[256px] bg-bg-surface rounded-xl border border-white/10 cursor-crosshair touch-none"
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
@@ -102,13 +102,13 @@ export function BrushPreview() {
         {!isEmpty && (
           <button
             onClick={clear}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-surface border border-border rounded-md text-text-secondary hover:bg-surface-elevated cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-white/5 border border-white/5 rounded-md text-gray-400 hover:bg-white/10 cursor-pointer"
           >
             <Eraser size={12} />
             Clear
           </button>
         )}
-        <span className="text-xs text-text-muted">{isEmpty ? 'Click or drag to paint' : 'Draw with mouse/stylus'}</span>
+        <span className="text-xs text-gray-400">{isEmpty ? 'Click or drag to paint' : 'Draw with mouse/stylus'}</span>
       </div>
     </div>
   )

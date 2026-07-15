@@ -25,15 +25,15 @@ function App() {
         }
         panel={
           <>
-            <div className="bg-surface rounded-xl p-5 border border-border">
+            <div className="bg-bg-surface rounded-xl p-5 border border-white/5">
               <ParameterPanel />
             </div>
-            <div className="bg-surface rounded-xl p-5 border border-border">
-              <h2 className="text-sm font-semibold text-text-primary mb-4">Export</h2>
+            <div className="bg-bg-surface rounded-xl p-5 border border-white/5">
+              <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Export</h2>
               <ExportPanel />
             </div>
-            <div className="bg-surface rounded-xl p-5 border border-border">
-              <h2 className="text-sm font-semibold text-text-primary mb-4">Presets</h2>
+            <div className="bg-bg-surface rounded-xl p-5 border border-white/5">
+              <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Presets</h2>
               <PresetPanel />
             </div>
           </>

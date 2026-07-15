@@ -61,7 +61,7 @@ export function PresetPanel() {
         </Button>
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="h-11 w-11 flex items-center justify-center rounded-lg bg-surface border border-border text-text-secondary hover:bg-surface-elevated hover:text-text-primary cursor-pointer"
+          className="h-10 w-10 flex items-center justify-center rounded-lg bg-white/5 border border-white/5 text-gray-400 hover:bg-white/10 hover:text-gray-200 cursor-pointer"
         >
           <Upload size={14} />
         </button>
@@ -73,23 +73,23 @@ export function PresetPanel() {
           {presets.map((preset) => (
             <div
               key={preset.name}
-              className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-surface-elevated group cursor-pointer"
+              className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/5 group cursor-pointer"
               onClick={() => loadPreset(preset)}
             >
               <div className="flex-1 min-w-0">
-                <div className="text-sm text-text-primary truncate">{preset.name}</div>
-                <div className="text-xs text-text-muted">{preset.type}</div>
+                <div className="text-sm text-gray-100 truncate">{preset.name}</div>
+                <div className="text-xs text-gray-400">{preset.type}</div>
               </div>
               <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button
                   onClick={(e) => { e.stopPropagation(); handleExportPreset(preset.name) }}
-                  className="p-1.5 rounded text-text-muted hover:text-text-primary cursor-pointer"
+                  className="p-1.5 rounded text-gray-400 hover:text-gray-200 cursor-pointer"
                 >
                   <Download size={12} />
                 </button>
                 <button
                   onClick={(e) => { e.stopPropagation(); deletePreset(preset.name) }}
-                  className="p-1.5 rounded text-text-muted hover:text-error cursor-pointer"
+                  className="p-1.5 rounded text-gray-400 hover:text-red-400 cursor-pointer"
                 >
                   <Trash2 size={12} />
                 </button>
@@ -106,7 +106,7 @@ export function PresetPanel() {
             value={presetName}
             onChange={(e) => setPresetName(e.target.value)}
             placeholder="Preset name..."
-            className="w-full h-10 px-3 text-sm bg-surface-elevated border border-border rounded-lg text-text-primary placeholder:text-text-muted outline-none focus:border-primary"
+            className="w-full h-10 px-3 text-sm bg-white/5 border border-white/10 rounded-lg text-gray-200 placeholder:text-gray-500 outline-none focus:border-orange-500/50"
             onKeyDown={(e) => e.key === 'Enter' && handleSave()}
             autoFocus
           />

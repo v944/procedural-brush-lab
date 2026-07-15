@@ -19,8 +19,8 @@ export function Slider({ label, value, min, max, step, onChange }: SliderProps) 
   return (
     <div className="mb-4">
       <div className="flex justify-between items-center mb-1">
-        <label className="text-xs font-medium text-text-secondary">{label}</label>
-        <span className="text-xs font-semibold text-text-primary font-mono">{displayValue}</span>
+        <label className="text-xs font-medium text-gray-400">{label}</label>
+        <span className="text-xs font-semibold text-gray-100 font-mono">{displayValue}</span>
       </div>
       <input
         type="range"

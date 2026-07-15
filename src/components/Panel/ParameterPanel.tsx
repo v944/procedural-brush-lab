@@ -71,11 +71,11 @@ export function ParameterPanel() {
   return (
     <div className="space-y-4">
       <div>
-        <label className="text-xs font-medium text-text-secondary mb-1 block">Texture Type</label>
+        <label className="text-xs font-medium text-gray-400 mb-1 block uppercase tracking-wider">Texture Type</label>
         <Dropdown value={textureType} options={TEXTURE_OPTIONS} onChange={setTextureType} />
       </div>
 
-      <div className="border-t border-border pt-4">
+      <div className="border-t border-white/5 pt-4">
         {paramDefs.map((def) => (
           <Slider
             key={def.key}
@@ -89,7 +89,7 @@ export function ParameterPanel() {
         ))}
       </div>
 
-      <div className="border-t border-border pt-4 space-y-3">
+      <div className="border-t border-white/5 pt-4 space-y-3">
         <div className="flex items-center gap-2">
           <Button variant="secondary" onClick={randomizeSeed} className="flex-1 flex items-center justify-center gap-2">
             <Shuffle size={14} />
@@ -97,8 +97,8 @@ export function ParameterPanel() {
           </Button>
         </div>
         <div className="flex items-center justify-between px-1">
-          <span className="text-xs text-text-muted">Seed</span>
-          <span className="text-xs font-mono text-text-primary font-medium">{params.seed}</span>
+          <span className="text-xs text-gray-400">Seed</span>
+          <span className="text-xs font-mono text-gray-100 font-medium">{params.seed}</span>
         </div>
         <Button variant="ghost" onClick={resetParams} className="w-full flex items-center justify-center gap-2">
           <RotateCcw size={14} />
