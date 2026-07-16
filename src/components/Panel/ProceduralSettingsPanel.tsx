@@ -18,11 +18,10 @@ export function ProceduralSettingsPanel() {
   if (shape !== 'procedural') return null
 
   return (
-    <div className="border-t border-white/5 pt-4 mt-4">
+    <div className="mt-4 pt-4 border-t border-white/5">
       <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
-        Procedural
+        Procedural Brush Tip Shape
       </h3>
-
       <div className="space-y-3">
         <div>
           <label className="text-xs font-medium text-gray-400 mb-1 block">Noise Type</label>

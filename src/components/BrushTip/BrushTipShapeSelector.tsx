@@ -1,12 +1,10 @@
-import { Circle, Square, CircleDot, SquareDot, Sparkles } from 'lucide-react'
+import { Circle, Square, Sparkles } from 'lucide-react'
 import { useBrushTipStore, type BrushTipShape } from '../../stores/brushTipStore'
 import { cn } from '../../lib/cn'
 
 const SHAPES: { id: BrushTipShape; label: string; icon: typeof Circle }[] = [
   { id: 'round', label: 'Round', icon: Circle },
   { id: 'square', label: 'Square', icon: Square },
-  { id: 'softRound', label: 'Sft R', icon: CircleDot },
-  { id: 'softSquare', label: 'Sft S', icon: SquareDot },
   { id: 'procedural', label: 'Proc', icon: Sparkles },
 ]
 
@@ -16,9 +14,6 @@ export function BrushTipShapeSelector() {
 
   return (
     <div>
-      <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 block">
-        Brush Tip Shape
-      </label>
       <div className="flex gap-2">
         {SHAPES.map(({ id, label, icon: Icon }) => (
           <button

@@ -48,33 +48,44 @@ export function AnglePicker() {
   const handleY = 50 + 40 * Math.sin(rad)
 
   return (
-    <div className="flex items-center gap-2">
-      <div
-        ref={ref}
-        className="relative w-12 h-12 rounded-full border border-white/10 cursor-pointer shrink-0"
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        style={{ touchAction: 'none' }}
-      >
+    <div>
+      <div className="flex items-center gap-3">
         <div
-          className="absolute inset-0 rounded-full pointer-events-none"
-          style={{
-            background: `conic-gradient(from ${-90}deg, rgba(249,115,22,0.2) ${((angle + 180) % 360)}deg, transparent ${((angle + 180) % 360)}deg)`,
+          ref={ref}
+          className="relative w-12 h-12 rounded-full border border-white/10 cursor-pointer shrink-0"
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          style={{ touchAction: 'none' }}
+        >
+          <div
+            className="absolute inset-0 rounded-full pointer-events-none"
+            style={{
+              background: `conic-gradient(from ${-90}deg, rgba(249,115,22,0.2) ${((angle + 180) % 360)}deg, transparent ${((angle + 180) % 360)}deg)`,
+            }}
+          />
+          <div
+            className="absolute w-2.5 h-2.5 bg-orange-500 rounded-full shadow-lg -translate-x-1/2 -translate-y-1/2 pointer-events-none transition-transform"
+            style={{
+              left: `${handleX}%`,
+              top: `${handleY}%`,
+              transform: `translate(-50%, -50%) scale(${dragging ? 1.25 : 1})`,
+            }}
+          />
+        </div>
+        <input
+          type="number"
+          min={-180}
+          max={180}
+          step={1}
+          value={angle}
+          onChange={(e) => {
+            const v = parseFloat(e.target.value)
+            if (!isNaN(v)) setAngle(v)
           }}
-        />
-        <div
-          className="absolute w-2.5 h-2.5 bg-orange-500 rounded-full shadow-lg -translate-x-1/2 -translate-y-1/2 pointer-events-none transition-transform"
-          style={{
-            left: `${handleX}%`,
-            top: `${handleY}%`,
-            transform: `translate(-50%, -50%) scale(${dragging ? 1.25 : 1})`,
-          }}
+          className="w-14 bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-xs text-gray-200 text-center font-mono focus:outline-none focus:border-orange-500/50"
         />
       </div>
-      <span className="text-xs font-mono text-gray-400 w-10 text-right tabular-nums">
-        {angle}°
-      </span>
     </div>
   )
 }

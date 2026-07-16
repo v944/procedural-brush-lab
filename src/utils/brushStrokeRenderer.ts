@@ -32,6 +32,9 @@ export class BrushStrokeRenderer {
   private strokeCanvas: HTMLCanvasElement
   private strokeCtx: CanvasRenderingContext2D
   private rng: SeededRandom
+  private textureCanvas: HTMLCanvasElement | null = null
+  private stampCanvas: HTMLCanvasElement
+  private stampCtx: CanvasRenderingContext2D
 
   constructor(strokeCanvas: HTMLCanvasElement) {
     this.strokeCanvas = strokeCanvas
@@ -41,7 +44,17 @@ export class BrushStrokeRenderer {
     this.tipCanvas.width = 128
     this.tipCanvas.height = 128
     this.tipCtx = this.tipCanvas.getContext('2d')!
+
+    this.stampCanvas = document.createElement('canvas')
+    this.stampCanvas.width = 128
+    this.stampCanvas.height = 128
+    this.stampCtx = this.stampCanvas.getContext('2d')!
+
     this.rng = new SeededRandom(42)
+  }
+
+  setTexture(canvas: HTMLCanvasElement | null): void {
+    this.textureCanvas = canvas
   }
 
   async updateTip(tipDataUrl: string): Promise<void> {
@@ -168,24 +181,50 @@ export class BrushStrokeRenderer {
   }
 
   private drawStamp(params: StampParams): void {
-    const ctx = this.strokeCtx
-    ctx.save()
-    ctx.translate(params.x, params.y)
-    ctx.rotate(params.angle)
+    const stampSize = Math.ceil(params.size)
+    if (stampSize < 1) return
 
-    if (params.flipX) ctx.scale(-1, 1)
-    if (params.flipY) ctx.scale(1, -1)
+    if (this.textureCanvas) {
+      this.stampCanvas.width = stampSize
+      this.stampCanvas.height = stampSize
+      const sc = this.stampCtx
+      sc.globalCompositeOperation = 'source-over'
+      sc.clearRect(0, 0, stampSize, stampSize)
 
-    ctx.globalAlpha = params.opacity
-    ctx.drawImage(
-      this.tipCanvas,
-      -params.size / 2,
-      -params.size / 2,
-      params.size,
-      params.size
-    )
-    ctx.restore()
+      sc.drawImage(this.textureCanvas, 0, 0, stampSize, stampSize)
+
+      sc.globalCompositeOperation = 'destination-in'
+      sc.drawImage(this.tipCanvas, 0, 0, stampSize, stampSize)
+      sc.globalCompositeOperation = 'source-over'
+
+      this.strokeCtx.save()
+      this.strokeCtx.translate(params.x, params.y)
+      this.strokeCtx.rotate(params.angle)
+      if (params.flipX) this.strokeCtx.scale(-1, 1)
+      if (params.flipY) this.strokeCtx.scale(1, -1)
+      this.strokeCtx.globalAlpha = params.opacity
+      this.strokeCtx.drawImage(this.stampCanvas, -stampSize / 2, -stampSize / 2)
+      this.strokeCtx.restore()
+    } else {
+      const ctx = this.strokeCtx
+      ctx.save()
+      ctx.translate(params.x, params.y)
+      ctx.rotate(params.angle)
+      if (params.flipX) ctx.scale(-1, 1)
+      if (params.flipY) ctx.scale(1, -1)
+      ctx.globalAlpha = params.opacity
+      ctx.drawImage(
+        this.tipCanvas,
+        -params.size / 2,
+        -params.size / 2,
+        params.size,
+        params.size
+      )
+      ctx.restore()
+    }
   }
+
+
 
   private computeSizeJitter(i: number, pressure: number, distance: number, settings: BrushTipState): number {
     if (!settings.shapeDynamics.enabled) return 1.0

@@ -6,9 +6,7 @@ import { useBrushTipStore, type BrushTipShape } from '../stores/brushTipStore'
 const SHAPE_INDEX: Record<BrushTipShape, number> = {
   round: 0,
   square: 1,
-  softRound: 2,
-  softSquare: 3,
-  procedural: 4,
+  procedural: 2,
 }
 
 const NOISE_TYPE_INDEX: Record<string, number> = {
@@ -209,9 +207,13 @@ export function useWebGLBrushTip(
       g.framebufferTexture2D(g.FRAMEBUFFER, g.COLOR_ATTACHMENT0, g.TEXTURE_2D, tex, 0)
 
       g.viewport(0, 0, width, height)
+      g.clearColor(0, 0, 0, 0)
+      g.clear(g.COLOR_BUFFER_BIT)
+      g.disable(g.BLEND)
       setAllTipUniforms(g, p, u, width, height)
       g.bindVertexArray(v)
       g.drawArrays(g.TRIANGLE_STRIP, 0, 4)
+      g.enable(g.BLEND)
 
       const url = readPixelsToDataURL(g, width, height)
 

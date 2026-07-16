@@ -101,10 +101,6 @@ void main() {
         dist = -sdCircle(uv, 0.45);
     } else if (u_shape == 1) {
         dist = -sdBox(uv, vec2(0.45));
-    } else if (u_shape == 2) {
-        dist = -sdCircle(uv, 0.45);
-    } else if (u_shape == 3) {
-        dist = -sdBox(uv, vec2(0.45));
     } else {
         float shape = proceduralShape(uv);
         dist = shape - 0.5;

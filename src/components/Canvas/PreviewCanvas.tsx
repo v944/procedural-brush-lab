@@ -37,7 +37,7 @@ export function PreviewCanvas() {
         <WarningBanner message="Your browser does not support WebGL2. Using simplified Canvas 2D rendering. For full functionality, update your browser." />
       )}
 
-      <div className="w-[512px] h-[512px] max-w-full max-h-[60vh] bg-bg-surface rounded-xl overflow-hidden border border-white/10">
+      <div className="w-[384px] h-[384px] max-w-full max-h-[45vh] bg-bg-surface rounded-xl overflow-hidden border border-white/10">
         <canvas
           ref={canvasRef}
           data-preview-canvas
@@ -46,10 +46,8 @@ export function PreviewCanvas() {
         />
       </div>
 
-      {isWebGL2 ? <WebGLCanvas canvasRef={canvasRef} /> : <Canvas2DFallback canvasRef={canvasRef} />}
-
       <div className="flex gap-2">
-        {(['single', 'tile2x2', 'brush'] as const).map((mode) => (
+        {(['single', 'tile2x2'] as const).map((mode) => (
           <button
             key={mode}
             onClick={() => setViewMode(mode)}
@@ -59,10 +57,12 @@ export function PreviewCanvas() {
                 : 'bg-white/5 text-gray-400 border border-white/5 hover:bg-white/10'
             }`}
           >
-            {mode === 'single' ? 'Single' : mode === 'tile2x2' ? '2×2 Tile' : 'Brush Preview'}
+            {mode === 'single' ? 'Single' : '2×2 Tile'}
           </button>
         ))}
       </div>
+
+      {isWebGL2 ? <WebGLCanvas canvasRef={canvasRef} /> : <Canvas2DFallback canvasRef={canvasRef} />}
     </div>
   )
 }

@@ -1,6 +1,9 @@
 import { useRef, useEffect, useCallback, useState } from 'react'
 import { Play, Trash2, Undo2, Download } from 'lucide-react'
 import { useBrushTipStore } from '../../stores/brushTipStore'
+import { useStore } from '../../stores/useStore'
+import { readTexture } from '../../hooks/useWebGLCanvas'
+import { readTip } from '../../hooks/useWebGLBrushTip'
 import { BrushStrokeRenderer, type StrokePoint } from '../../utils/brushStrokeRenderer'
 import { exportStrokePNG } from '../../utils/export'
 
@@ -63,21 +66,42 @@ export function StrokePreviewCanvas() {
   useEffect(() => {
     if (!initialized || !rendererRef.current) return
     const renderer = rendererRef.current
-    const tempCanvas = document.createElement('canvas')
-    tempCanvas.width = 128
-    tempCanvas.height = 128
-    const tempCtx = tempCanvas.getContext('2d')!
-    tempCtx.fillStyle = 'white'
-    tempCtx.beginPath()
-    tempCtx.arc(64, 64, 60, 0, Math.PI * 2)
-    tempCtx.fill()
-    const srcCanvas = document.querySelector<HTMLCanvasElement>('[data-brush-tip="true"]')
-    if (srcCanvas) {
-      renderer.setTipFromCanvas(srcCanvas)
-    } else {
-      renderer.setTipFromCanvas(tempCanvas)
-    }
+    readTip(128, 128).then((url) => {
+      if (url) {
+        renderer.updateTip(url)
+      } else {
+        const tempCanvas = document.createElement('canvas')
+        tempCanvas.width = 128
+        tempCanvas.height = 128
+        const tempCtx = tempCanvas.getContext('2d')!
+        tempCtx.fillStyle = 'white'
+        tempCtx.beginPath()
+        tempCtx.arc(64, 64, 60, 0, Math.PI * 2)
+        tempCtx.fill()
+        renderer.setTipFromCanvas(tempCanvas)
+      }
+    })
   }, [initialized, settings.shape, settings.diameter, settings.hardness, settings.roundness, settings.angle])
+
+  const textureType = useStore((s) => s.textureType)
+  const textureParams = useStore((s) => s.params)
+
+  useEffect(() => {
+    if (!initialized || !rendererRef.current) return
+    readTexture(512, 512).then((url) => {
+      if (!url) return
+      const img = new Image()
+      img.onload = () => {
+        const texCanvas = document.createElement('canvas')
+        texCanvas.width = 512
+        texCanvas.height = 512
+        const texCtx = texCanvas.getContext('2d')!
+        texCtx.drawImage(img, 0, 0)
+        rendererRef.current?.setTexture(texCanvas)
+      }
+      img.src = url
+    })
+  }, [initialized, textureType, textureParams])
 
   const saveState = useCallback(() => {
     const canvas = canvasRef.current
@@ -182,7 +206,7 @@ export function StrokePreviewCanvas() {
 
   return (
     <div className="flex flex-col gap-3 flex-1">
-      <div ref={containerRef} className="flex-1 min-h-[300px]">
+      <div ref={containerRef} className="h-[384px]">
         <canvas
           ref={canvasRef}
           className="w-full h-full bg-[#1A1A24] rounded-xl border border-white/10 cursor-crosshair touch-none"

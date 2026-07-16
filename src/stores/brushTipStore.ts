@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export type BrushTipShape = 'round' | 'square' | 'softRound' | 'softSquare' | 'procedural';
+export type BrushTipShape = 'round' | 'square' | 'procedural';
 
 export type JitterControl =
   | 'off'
@@ -172,7 +172,7 @@ export const useBrushTipStore = create<BrushTipState>()(
         set({ angle: normalizeAngle(angle) }),
 
       setSpacing: (spacing) =>
-        set({ spacing: clamp(spacing, 1, 1000) }),
+        set({ spacing: clamp(spacing, 1, 300) }),
 
       setProcedural: (settings) =>
         set((state) => ({
