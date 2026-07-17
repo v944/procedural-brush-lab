@@ -81,7 +81,7 @@ export function StrokePreviewCanvas() {
         renderer.setTipFromCanvas(tempCanvas)
       }
     })
-  }, [initialized, settings.shape, settings.diameter, settings.hardness, settings.roundness, settings.angle])
+  }, [initialized, settings.shape, settings.diameter, settings.hardness, settings.roundness, settings.angle, settings.procedural])
 
   const textureType = useStore((s) => s.textureType)
   const textureParams = useStore((s) => s.params)

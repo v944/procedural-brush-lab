@@ -98,8 +98,13 @@ function setAllTipUniforms(
   const set = (name: string, value: number | number[]) => {
     const loc = gl.getUniformLocation(program, name)
     if (loc === null) return
-    if (typeof value === 'number') gl.uniform1f(loc, value)
-    else if (value.length === 2) gl.uniform2f(loc, value[0], value[1])
+    if (typeof value === 'number') {
+      if (name === 'u_shape' || name === 'u_noiseType') {
+        gl.uniform1i(loc, value)
+      } else {
+        gl.uniform1f(loc, value)
+      }
+    } else if (value.length === 2) gl.uniform2f(loc, value[0], value[1])
   }
   set('u_resolution', [w, h])
   set('u_shape', uniforms.shape)
@@ -116,7 +121,9 @@ function setAllTipUniforms(
 
 export function useWebGLBrushTip(
   canvasRef: React.RefObject<HTMLCanvasElement | null>,
+  options?: { primary?: boolean },
 ) {
+  const isPrimary = options?.primary !== false
   const glRef = useRef<WebGL2RenderingContext | null>(null)
   const programRef = useRef<WebGLProgram | null>(null)
   const vaoRef = useRef<WebGLVertexArrayObject | null>(null)
@@ -189,45 +196,47 @@ export function useWebGLBrushTip(
     if (!program) return
     programRef.current = program
 
-    _readTipFn = async (width: number, height: number): Promise<string> => {
-      const g = glRef.current
-      const p = programRef.current
-      const v = vaoRef.current
-      const u = uniformsRef.current
-      if (!g || !p || !v || !u) return ''
+    if (isPrimary) {
+      _readTipFn = async (width: number, height: number): Promise<string> => {
+        const g = glRef.current
+        const p = programRef.current
+        const v = vaoRef.current
+        const u = uniformsRef.current
+        if (!g || !p || !v || !u) return ''
 
-      const fb = g.createFramebuffer()
-      const tex = g.createTexture()
-      g.bindTexture(g.TEXTURE_2D, tex)
-      g.texImage2D(g.TEXTURE_2D, 0, g.RGBA, width, height, 0, g.RGBA, g.UNSIGNED_BYTE, null)
-      g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MIN_FILTER, g.LINEAR)
-      g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_S, g.CLAMP_TO_EDGE)
-      g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_T, g.CLAMP_TO_EDGE)
-      g.bindFramebuffer(g.FRAMEBUFFER, fb)
-      g.framebufferTexture2D(g.FRAMEBUFFER, g.COLOR_ATTACHMENT0, g.TEXTURE_2D, tex, 0)
+        const fb = g.createFramebuffer()
+        const tex = g.createTexture()
+        g.bindTexture(g.TEXTURE_2D, tex)
+        g.texImage2D(g.TEXTURE_2D, 0, g.RGBA, width, height, 0, g.RGBA, g.UNSIGNED_BYTE, null)
+        g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MIN_FILTER, g.LINEAR)
+        g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_S, g.CLAMP_TO_EDGE)
+        g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_T, g.CLAMP_TO_EDGE)
+        g.bindFramebuffer(g.FRAMEBUFFER, fb)
+        g.framebufferTexture2D(g.FRAMEBUFFER, g.COLOR_ATTACHMENT0, g.TEXTURE_2D, tex, 0)
 
-      g.viewport(0, 0, width, height)
-      g.clearColor(0, 0, 0, 0)
-      g.clear(g.COLOR_BUFFER_BIT)
-      g.disable(g.BLEND)
-      setAllTipUniforms(g, p, u, width, height)
-      g.bindVertexArray(v)
-      g.drawArrays(g.TRIANGLE_STRIP, 0, 4)
-      g.enable(g.BLEND)
+        g.viewport(0, 0, width, height)
+        g.clearColor(0, 0, 0, 0)
+        g.clear(g.COLOR_BUFFER_BIT)
+        g.disable(g.BLEND)
+        setAllTipUniforms(g, p, u, width, height)
+        g.bindVertexArray(v)
+        g.drawArrays(g.TRIANGLE_STRIP, 0, 4)
+        g.enable(g.BLEND)
 
-      const url = readPixelsToDataURL(g, width, height)
+        const url = readPixelsToDataURL(g, width, height)
 
-      g.bindFramebuffer(g.FRAMEBUFFER, null)
-      g.deleteFramebuffer(fb)
-      g.deleteTexture(tex)
+        g.bindFramebuffer(g.FRAMEBUFFER, null)
+        g.deleteFramebuffer(fb)
+        g.deleteTexture(tex)
 
-      const canvas = canvasRef.current
-      if (canvas) {
-        const dpr = window.devicePixelRatio || 1
-        g.viewport(0, 0, canvas.clientWidth * dpr, canvas.clientHeight * dpr)
+        const canvas = canvasRef.current
+        if (canvas) {
+          const dpr = window.devicePixelRatio || 1
+          g.viewport(0, 0, canvas.clientWidth * dpr, canvas.clientHeight * dpr)
+        }
+
+        return url
       }
-
-      return url
     }
 
     syncUniforms()
@@ -237,7 +246,7 @@ export function useWebGLBrushTip(
     })
 
     return () => {
-      _readTipFn = null
+      if (isPrimary) _readTipFn = null
       unsub()
       if (programRef.current) gl.deleteProgram(programRef.current)
       if (vao) gl.deleteVertexArray(vao)

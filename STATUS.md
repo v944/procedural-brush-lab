@@ -81,7 +81,7 @@
 - [x] GitHub: https://github.com/v944/procedural-brush-lab
 - [x] Ярлыки на рабочем столе: **BrushSpark** (запуск) / **BrushSpark Stop** (остановка)
 
-### Баги (исправлены)
+### Баги (исправлены, Фаза 2)
 - [x] Шум исчезал при движении слайдера — накопление кадров из-за `gl.enable(BLEND)` без очистки
 - [x] Bristles показывал одну щетинку — потеря точности float32 в хеш-функции при seed > 1000
 - [x] Scales та же проблема с hash/random функциями
@@ -90,6 +90,10 @@
 - [x] Перекомпиляция шейдера на каждый чих (теперь только при смене типа текстуры)
 - [x] ABR v6.2 не открывался в Photoshop — переписан на ABR v2
 - [x] .brush — добавлен Grain.png (grayscale inverted), Thumbnail, исправлены ключи plist
+- [x] `uniform int` vs `gl.uniform1f` mismatch — шейдер не получал `u_shape`/`u_noiseType`, всегда round/simplex
+- [x] Круглая кисть выходила за границы preview при низкой hardness — адаптивный радиус `0.5 - edgeWidth`
+- [x] `_readTipFn` singleton сбрасывался при размонтировании ProceduralSettingsPanel — `{ primary: false }` для второстепенных экземпляров
+- [x] StrokePreview не обновлялся при изменении procedural-настроек — добавлен `settings.procedural` в зависимости useEffect
 
 ---
 
@@ -110,6 +114,7 @@
 - [x] **Noise Type** — Simplex / Value / Worley (3 кнопки)
 - [x] **Noise Amount** (0-100%), **Noise Scale** (0.1-10), **Threshold** (0.1-0.9), **Smoothing** (0-100%)
 - [x] **Seed** — number input + 🎲 randomize + Randomize All + Reset to Defaults
+- [x] **Preview окно** в секции Procedural Brush Tip Shape (слева, 128×128)
 
 #### Shape Dynamics
 - [x] Size Jitter + Control (Off/Fade/Pressure/Tilt/Direction)
@@ -201,4 +206,4 @@
 
 ---
 
-*Обновлено: 2026-07-15*
+*Обновлено: 2026-07-17*

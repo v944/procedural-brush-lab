@@ -96,17 +96,20 @@ void main() {
     uv.y /= u_roundness;
     uv = rotate2D(uv, u_angle);
 
+    float edgeWidth = mix(0.35, 0.02, u_hardness);
+    float maxExtent = 0.5;
+    float shapeSize = maxExtent - edgeWidth;
+
     float dist;
     if (u_shape == 0) {
-        dist = -sdCircle(uv, 0.45);
+        dist = -sdCircle(uv, shapeSize);
     } else if (u_shape == 1) {
-        dist = -sdBox(uv, vec2(0.45));
+        dist = -sdBox(uv, vec2(shapeSize));
     } else {
         float shape = proceduralShape(uv);
         dist = shape - 0.5;
     }
 
-    float edgeWidth = mix(0.35, 0.02, u_hardness);
     float alpha = smoothstep(-edgeWidth, edgeWidth, dist);
     alpha = pow(alpha, 0.8);
 
